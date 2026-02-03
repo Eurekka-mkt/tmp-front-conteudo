@@ -10,14 +10,14 @@ interface AppContentModalProps {
 }
 
 const CREATE_CONTENT_MUTATION = `
-  mutation CreateAppContent($input: AppDynamicContentInput!) {
-    createAppDynamicContent(appDynamicContent: $input)
+  mutation CreateAppDynamicContent($appDynamicContent: AppDynamicContentInput!) {
+    createAppDynamicContent(appDynamicContent: $appDynamicContent)
   }
 `;
 
 const UPDATE_CONTENT_MUTATION = `
-  mutation UpdateAppContent($id: ID!, $input: AppDynamicContentInput!) {
-    editAppDynamicContent(id: $id, appDynamicContent: $input)
+  mutation EditAppDynamicContent($id: ID!, $appDynamicContent: AppDynamicContentInput!) {
+    editAppDynamicContent(id: $id, appDynamicContent: $appDynamicContent)
   }
 `;
 
@@ -56,11 +56,11 @@ export function AppContentModal({ type, content, onClose }: AppContentModalProps
       if (content) {
         await query(UPDATE_CONTENT_MUTATION, {
           id: content.id,
-          input: formData,
+          appDynamicContent: formData,
         });
       } else {
         await query(CREATE_CONTENT_MUTATION, {
-          input: formData,
+          appDynamicContent: formData,
         });
       }
       onClose();

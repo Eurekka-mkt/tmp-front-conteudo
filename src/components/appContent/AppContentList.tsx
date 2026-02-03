@@ -9,8 +9,8 @@ interface AppContentListProps {
 }
 
 const LIST_CONTENT_QUERY = `
-  query ListAppContent($type: String!) {
-    listAppDynamicContent(type: $type) {
+  query PublicGetAppDynamicContent {
+    publicGetAppDynamicContent {
       id
       type
       active
@@ -18,20 +18,19 @@ const LIST_CONTENT_QUERY = `
       image
       description
       title
-      created_at
     }
   }
 `;
 
 const DELETE_CONTENT_MUTATION = `
-  mutation DeleteAppContent($id: ID!) {
+  mutation RemoveAppDynamicContent($id: ID!) {
     removeAppDynamicContent(id: $id)
   }
 `;
 
 const TOGGLE_ACTIVE_MUTATION = `
-  mutation ToggleAppContent($id: ID!, $active: Boolean!) {
-    editAppDynamicContent(id: $id, appDynamicContent: { active: $active })
+  mutation EditAppDynamicContent($id: ID!, $appDynamicContent: AppDynamicContentInput!) {
+    editAppDynamicContent(id: $id, appDynamicContent: $appDynamicContent)
   }
 `;
 
@@ -46,11 +45,12 @@ export function AppContentList({ type }: AppContentListProps) {
   const fetchContents = async () => {
     try {
       setLoading(true);
-      const response = await query<{ listAppDynamicContent: AppDynamicContent[] }>(
-        LIST_CONTENT_QUERY,
-        { type }
+      const response = await query<{ publicGetAppDynamicContent: AppDynamicContent[] }>(
+        LIST_CONTENT_QUERY
       );
-      setContents(response.listAppDynamicContent || []);
+      const allContents = response.publicGetAppDynamicContent || [];
+      const filteredContents = allContents.filter(content => content.type === type);
+      setContents(filteredContents);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch content');
@@ -76,7 +76,19 @@ export function AppContentList({ type }: AppContentListProps) {
 
   const handleToggleActive = async (id: string, currentActive: boolean) => {
     try {
-      await query(TOGGLE_ACTIVE_MUTATION, { id, active: !currentActive });
+      const content = contents.find(c => c.id === id);
+      if (!content) return;
+
+      const appDynamicContent = {
+        type: content.type,
+        active: !currentActive,
+        link: content.link,
+        image: content.image,
+        description: content.description,
+        title: content.title,
+      };
+
+      await query(TOGGLE_ACTIVE_MUTATION, { id, appDynamicContent });
       fetchContents();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to toggle active status');
