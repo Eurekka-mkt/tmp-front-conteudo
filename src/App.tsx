@@ -47,6 +47,7 @@ import { CoursePermissions } from './components/course/CoursePermission';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { InvoiceDataList } from './components/invoice/InvoiceDataList';
 import { AccountManagement } from './pages/AccountManagement';
+import { AppContentManagement } from './components/appContent/AppContentManagement';
 
 function App() {
   // Persistência global do utm_source
@@ -226,6 +227,7 @@ function App() {
           <Route path="posts/new" element={<NewsForm />} />
           <Route path="posts/edit/:id" element={<NewsEditForm />} />
           <Route path="contas" element={<AccountManagement/>} />
+          <Route path="app-content" element={<AppContentManagement />} />
           <Route path="*" element={<Navigate to="." replace />} />
         </Route>
 

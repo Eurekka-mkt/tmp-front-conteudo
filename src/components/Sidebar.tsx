@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { BookOpen, LayoutDashboard, FileText, Image, BookMarked, ShoppingBag, LogOut, X, Rss, Package, Receipt, User } from 'lucide-react';
+import { BookOpen, LayoutDashboard, FileText, Image, BookMarked, ShoppingBag, LogOut, X, Rss, Package, Receipt, User, Smartphone } from 'lucide-react';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -17,6 +17,7 @@ const menuItems = [
   { icon: Rss, label: 'Blog', href: '/admin/blog' },
   { icon: Image, label: 'Banners', href: '/admin/banners' },
   { icon: BookMarked, label: 'Livros', href: '/admin/books' },
+  { icon: Smartphone, label: 'Conteúdo do App', href: '/admin/app-content' },
 ];
 
 export function Sidebar({ onClose }: SidebarProps) {
